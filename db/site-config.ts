@@ -18,10 +18,10 @@ async function database() {
 
 export async function getSiteConfig(): Promise<SiteConfig> {
   const db = await database();
-  const row = await db
+  const row = (await db
     .prepare("SELECT content_json FROM site_settings WHERE id = ?")
     .bind(1)
-    .first<{ content_json: string }>();
+    .first()) as { content_json: string } | null;
 
   if (!row) return DEFAULT_SITE_CONFIG;
 

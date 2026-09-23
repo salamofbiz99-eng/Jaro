@@ -33,7 +33,7 @@ const serverHandler = {
       }, allowedWidths);
     }
 
-    const response = await handler.fetch(request, runtimeEnv, ctx);
+    const response = await handler.fetch(request, runtimeEnv as any, ctx as any);
     if (url.pathname.startsWith("/admin") || url.pathname.startsWith("/api/admin")) {
       const protectedResponse = new Response(response.body, response);
       protectedResponse.headers.set("Cache-Control", "no-store");
