@@ -18,7 +18,7 @@ export async function authenticate(request: Request, env?: AuthEnv): Promise<Req
   if (url.pathname === "/signout-with-chatgpt") return new Response("Close the private browser window to clear the saved administrator login.", { headers: { "Cache-Control":"no-store" } });
   if (protectedPath(url.pathname)) {
     const email = adminEmails?.split(",")[0]?.trim().toLowerCase();
-    if (!email || !adminPassword || adminPassword.length < 20) return new Response("Administrator access is not configured.", {status:503});
+    if (!email || !adminPassword || adminPassword.length < 6) return new Response("Administrator access is not configured.", {status:503});
     if (url.protocol !== "https:" && !["localhost","127.0.0.1"].includes(url.hostname)) return new Response("HTTPS required.",{status:403});
     if (!["GET","HEAD","OPTIONS"].includes(request.method) && request.headers.get("origin") !== url.origin) return new Response("Invalid request origin.",{status:403});
     let decoded = "";
