@@ -33,7 +33,7 @@ interface ExecutionContext {
 
 const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-    (globalThis as unknown as { __JARO_ENV__?: Env }).__JARO_ENV__ = env;
+    (globalThis as unknown as { __JARO_ENV__?: Env }).__JARO_ENV__ = env || {};
     const authenticated = await authenticate(request, env);
     if (authenticated instanceof Response) return authenticated;
     request = authenticated;

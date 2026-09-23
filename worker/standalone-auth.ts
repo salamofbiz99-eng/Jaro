@@ -8,9 +8,9 @@ async function equal(a: string, b: string) {
   for (let i=0;i<x.length;i++) diff |= x[i] ^ y[i];
   return diff === 0;
 }
-export async function authenticate(request: Request, env: AuthEnv): Promise<Request | Response> {
-  const adminEmails = env.ADMIN_EMAILS ?? (typeof process !== "undefined" ? process.env?.ADMIN_EMAILS : undefined);
-  const adminPassword = env.ADMIN_PASSWORD ?? (typeof process !== "undefined" ? process.env?.ADMIN_PASSWORD : undefined);
+export async function authenticate(request: Request, env?: AuthEnv): Promise<Request | Response> {
+  const adminEmails = env?.ADMIN_EMAILS ?? (typeof process !== "undefined" ? process.env?.ADMIN_EMAILS : undefined);
+  const adminPassword = env?.ADMIN_PASSWORD ?? (typeof process !== "undefined" ? process.env?.ADMIN_PASSWORD : undefined);
   const url = new URL(request.url);
   const headers = new Headers(request.headers);
   for (const key of [...headers.keys()]) if (key.startsWith("oai-")) headers.delete(key);

@@ -9,11 +9,11 @@
     "install:ci": "npm ci",
     "dev": "vite",
     "build": "vinext build",
-    "start": "vite preview",
+    "start": "vinext start --hostname 0.0.0.0",
     "test": "npm run test:auth",
     "lint": "eslint . --ignore-pattern dist",
     "db:generate": "drizzle-kit generate",
-    "preview": "vite preview",
+    "preview": "vinext start --hostname 0.0.0.0",
     "deploy": "npm run build && wrangler deploy",
     "test:auth": "node --experimental-strip-types --test tests/standalone-auth.test.mjs"
   },
