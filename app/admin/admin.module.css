@@ -1,0 +1,83 @@
+.adminShell { min-height: 100vh; display: grid; grid-template-columns: 255px 1fr; background: #f4f1e9; color: #0c1c1b; }
+.sidebar { position: sticky; top: 0; height: 100vh; padding: 34px 28px 25px; display: flex; flex-direction: column; color: white; background: #071f1e; }
+.adminBrand { display: flex; align-items: center; gap: 13px; padding-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,.12); }
+.adminBrand > span { width: 45px; height: 50px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.45); border-radius: 50%; color: #e2be6f; font-family: Georgia, serif; font-size: 18px; }
+.adminBrand div { display: flex; flex-direction: column; }
+.adminBrand strong { font-family: Georgia, serif; font-size: 21px; letter-spacing: .12em; }
+.adminBrand small { margin-top: 5px; color: #a7e2d1; font-size: 7px; letter-spacing: .24em; }
+.sidebar nav { display: flex; flex-direction: column; gap: 7px; margin-top: 35px; }
+.sidebar nav a { padding: 13px 14px; color: rgba(255,255,255,.6); border-left: 2px solid transparent; font-size: 12px; transition: .2s ease; }
+.sidebar nav a:hover { color: white; background: rgba(255,255,255,.05); border-left-color: #a7e2d1; }
+.sidebarBottom { margin-top: auto; padding-top: 22px; display: flex; flex-direction: column; border-top: 1px solid rgba(255,255,255,.12); }
+.sidebarBottom small { color: rgba(255,255,255,.4); font-size: 8px; text-transform: uppercase; letter-spacing: .12em; }
+.sidebarBottom strong { overflow: hidden; margin-top: 7px; color: rgba(255,255,255,.82); font-size: 10px; text-overflow: ellipsis; }
+.sidebarBottom a { margin-top: 15px; color: #a7e2d1; font-size: 10px; }
+.workspace { min-width: 0; padding: 0 4vw 55px; }
+.topbar { min-height: 130px; display: flex; align-items: center; justify-content: space-between; gap: 30px; border-bottom: 1px solid #d4d4cb; }
+.topbar p, .panelHeading p { margin: 0 0 8px; color: #0f5a52; font-size: 8px; font-weight: 700; letter-spacing: .2em; }
+.topbar h1 { margin: 0; font-family: Georgia, serif; font-size: 36px; font-weight: 400; }
+.topActions { display: flex; align-items: center; gap: 12px; }
+.topActions a { padding: 13px 16px; color: #0f5a52; border: 1px solid #b9c8c1; border-radius: 3px; font-size: 10px; font-weight: 700; }
+.topActions button, .darkButton { min-width: 145px; min-height: 43px; padding: 0 18px; color: white; background: #0f5a52; border: 0; border-radius: 3px; font-size: 10px; font-weight: 700; cursor: pointer; }
+.topActions button:disabled { opacity: .65; cursor: wait; }
+.successNotice, .errorNotice { margin: 18px 0 0; padding: 13px 16px; border-radius: 3px; font-size: 11px; }
+.successNotice { color: #0b4c41; background: #d9eee6; border: 1px solid #b8dccf; }
+.errorNotice { color: #752d27; background: #f2ded9; border: 1px solid #e2bab1; }
+.overview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 28px 0; }
+.overview article { min-height: 105px; display: grid; grid-template-columns: 32px 1fr auto; align-items: center; gap: 13px; padding: 20px; background: #fbfaf6; border: 1px solid #deded5; }
+.overview article > span { color: #98a39f; font-family: Georgia, serif; font-size: 13px; }
+.overview article div { display: flex; flex-direction: column; }
+.overview small { color: #7a8581; font-size: 8px; text-transform: uppercase; letter-spacing: .12em; }
+.overview strong { margin-top: 7px; font-family: Georgia, serif; font-size: 22px; font-weight: 400; }
+.statusDot { width: 8px; height: 8px; border-radius: 50%; background: #55a287; box-shadow: 0 0 0 5px #deeee8; }
+.panel { scroll-margin-top: 20px; margin-top: 20px; padding: clamp(24px, 3vw, 42px); background: #fbfaf6; border: 1px solid #deded5; }
+.panelHeading { display: flex; justify-content: space-between; gap: 25px; margin-bottom: 30px; padding-bottom: 22px; border-bottom: 1px solid #deded5; }
+.panelHeading h2 { margin: 0; font-family: Georgia, serif; font-size: 31px; font-weight: 400; }
+.panelHeading > span { max-width: 290px; align-self: end; color: #75807c; font-size: 10px; line-height: 1.6; text-align: right; }
+.formGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.formGrid label, .serviceEditor label { display: flex; flex-direction: column; gap: 8px; color: #5e6a66; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; }
+.formGrid label > small { color: #89938f; font-size: 8px; font-weight: 400; line-height: 1.4; text-transform: none; letter-spacing: 0; }
+.formGrid input, .formGrid textarea, .serviceEditor input, .serviceEditor textarea { width: 100%; padding: 12px 13px; color: #0c1c1b; background: white; border: 1px solid #cfd4cd; border-radius: 3px; outline: none; font: 13px/1.5 Arial, sans-serif; text-transform: none; letter-spacing: 0; }
+.formGrid input:focus, .formGrid textarea:focus, .serviceEditor input:focus, .serviceEditor textarea:focus { border-color: #0f5a52; box-shadow: 0 0 0 3px rgba(15,90,82,.08); }
+.wide { grid-column: 1 / -1; }
+.serviceEditorGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.serviceEditor { padding: 22px; display: flex; flex-direction: column; gap: 17px; background: #f2efe6; border: 1px solid #d8d8ce; }
+.serviceEditorTop { display: flex; align-items: center; gap: 12px; padding-bottom: 14px; border-bottom: 1px solid #d4d4ca; }
+.serviceEditorTop span { color: #0f5a52; font-family: Georgia, serif; font-size: 13px; }
+.serviceEditorTop strong { font-family: Georgia, serif; font-size: 19px; font-weight: 400; }
+.photoEditor { position: relative; overflow: hidden; aspect-ratio: 16 / 9; background: #dfe8e3; border: 1px solid #ccd2cb; }
+.photoEditor img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.photoUpload { position: absolute; right: 10px; bottom: 10px; min-height: 38px; padding: 0 14px; display: inline-flex !important; justify-content: center; align-items: center; color: white !important; background: rgba(7,31,30,.9); border: 1px solid rgba(255,255,255,.35); border-radius: 3px; cursor: pointer; text-transform: none !important; letter-spacing: 0 !important; backdrop-filter: blur(8px); }
+.photoUpload:hover { background: #0f5a52; }
+.photoUpload input { position: absolute; width: 1px !important; height: 1px; padding: 0 !important; opacity: 0; pointer-events: none; }
+.adminFooter { padding-top: 40px; color: #818b87; font-size: 8px; text-align: center; text-transform: uppercase; letter-spacing: .16em; }
+.lockedPage { min-height: 100vh; display: grid; place-items: center; padding: 25px; color: white; background: radial-gradient(circle at 20% 15%, #12665c, transparent 30%), #071f1e; }
+.lockedCard { width: min(570px, 100%); padding: clamp(35px, 7vw, 70px); display: flex; flex-direction: column; align-items: flex-start; background: #f4f1e9; color: #0c1c1b; box-shadow: 0 35px 90px rgba(0,0,0,.32); }
+.lockIcon { width: 58px; height: 64px; display: grid; place-items: center; color: #0f5a52; border: 1px solid #0f5a52; border-radius: 50%; font-family: Georgia, serif; font-size: 25px; }
+.kicker { margin: 28px 0 10px; color: #0f5a52; font-size: 8px; font-weight: 700; letter-spacing: .23em; }
+.lockedCard h1 { margin: 0; font-family: Georgia, serif; font-size: clamp(35px, 6vw, 53px); font-weight: 400; line-height: 1; }
+.lockedCard > p:not(.kicker) { margin: 25px 0; color: #63706c; font-size: 13px; line-height: 1.75; }
+.darkButton { display: grid; place-items: center; }
+.textLink { margin-top: 18px; color: #0f5a52; font-size: 10px; border-bottom: 1px solid #8aa8a0; padding-bottom: 4px; }
+
+@media (max-width: 900px) {
+  .adminShell { grid-template-columns: 1fr; }
+  .sidebar { position: relative; width: 100%; height: auto; padding: 20px; flex-direction: row; align-items: center; }
+  .adminBrand { padding: 0; border: 0; }
+  .sidebar nav { margin: 0 0 0 auto; flex-direction: row; }
+  .sidebarBottom { display: none; }
+  .workspace { padding: 0 20px 45px; }
+  .serviceEditorGrid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 650px) {
+  .sidebar nav { display: none; }
+  .topbar { align-items: flex-start; flex-direction: column; padding: 25px 0; }
+  .topActions { width: 100%; }
+  .topActions a, .topActions button { flex: 1; text-align: center; }
+  .overview { grid-template-columns: 1fr; }
+  .formGrid { grid-template-columns: 1fr; }
+  .wide { grid-column: auto; }
+  .panelHeading { flex-direction: column; }
+  .panelHeading > span { align-self: start; text-align: left; }
+}
