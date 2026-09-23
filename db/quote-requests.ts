@@ -1,7 +1,5 @@
 import { getLocalSqliteAdapter } from "./sqlite-fallback";
 
-type QuoteRuntime = { DB?: D1Database };
-
 export type QuoteRequestInput = {
   service: string;
   propertyType: string;
@@ -30,8 +28,7 @@ const CREATE_QUOTE_REQUESTS = `
 `;
 
 function database() {
-  const db = (globalThis as unknown as { __JARO_ENV__?: QuoteRuntime }).__JARO_ENV__?.DB || getLocalSqliteAdapter();
-  return db;
+  return getLocalSqliteAdapter();
 }
 
 export async function saveQuoteRequest(input: QuoteRequestInput) {

@@ -1,8 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
 
-type MediaRuntime = { BUCKET?: R2Bucket };
-
 function getLocalDiskBucket() {
   const uploadsDir = process.env.UPLOADS_DIR || "./data/uploads";
   return {
@@ -42,8 +40,5 @@ function getLocalDiskBucket() {
 }
 
 export function getMediaBucket() {
-  const bucket = (globalThis as unknown as { __JARO_ENV__?: MediaRuntime }).__JARO_ENV__?.BUCKET;
-  if (bucket) return bucket;
   return getLocalDiskBucket();
 }
-

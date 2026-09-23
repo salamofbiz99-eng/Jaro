@@ -1,135 +1,63 @@
-# JARO Cleaning — GitHub + Cloudflare
+# JARO Cleaning — Render.com + Docker Setup
 
-Экспорт исходного кода проекта jaro-cleaning, версия 10, от 23 сентября 2026.
-Основа: commit 0a29d52f39e168caa117371afb4309832c1a401f. Этот экспорт адаптирован
-для отдельного Cloudflare Worker; действующий сайт в ChatGPT не изменён.
+Full source code and deployment setup for **JARO Cleaning** configured for **Render.com** and **Docker**.
 
-## Что внутри
+## 🚀 Overview
 
-Сайт, калькулятор, форма заявки, админка, локальные изображения, миграции базы,
-конфигурация Cloudflare и автоматический деплой через GitHub Actions.
-GitHub хранит код. Cloudflare Workers запускает сайт. GitHub Pages для этого
-проекта не подходит: форма и админка используют сервер, D1 и R2.
+This application runs as a Node.js / Docker web service on Render with:
+- **Framework**: Next.js App Router (via `vinext`)
+- **Database**: Embedded SQLite (`./data/jaro.db`) via Node.js `node:sqlite`
+- **File Storage**: Local disk storage (`./data/uploads`)
+- **Container**: Docker (`node:22-slim`)
 
-## 1. Подготовка
+---
 
-Установи Node.js 22.13 или новее и Git. Открой терминал в этой папке:
+## 🛠️ Deploying to Render.com
 
+### 1. Repository Setup
+1. Push code to your GitHub repository (e.g. `salamofbiz99-eng/Jaro`).
+2. Log into [Render.com](https://render.com).
+
+### 2. Create Web Service
+1. Click **New +** → **Web Service**.
+2. Connect your GitHub repository `Jaro`.
+3. Render automatically detects `render.yaml` or you can manually select:
+   - **Environment**: `Docker`
+   - **Region**: `Frankfurt` (or preferred region)
+   - **Plan**: `Free` (or Starter)
+
+### 3. Environment Variables (in Render Dashboard)
+Set the following environment variables in Render:
+
+| Variable | Description | Example / Recommended |
+|----------|-------------|-----------------------|
+| `NODE_ENV` | Environment mode | `production` |
+| `PORT` | Listening Port | `10000` |
+| `ADMIN_USERNAME` | Admin login username | `admin@jaro-cleaning.nl` |
+| `ADMIN_PASSWORD_SHA256` | SHA256 hash of admin password | `6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b` |
+| `ADMIN_SESSION_SECRET` | Secret key for admin session tokens | `your-secret-key-32-chars-long` |
+| `ADMIN_EMAILS` | Admin email address | `admin@jaro-cleaning.nl` |
+| `ADMIN_PASSWORD` | Admin password | `your-secure-password-20-chars` |
+| `RESEND_API_KEY` | Resend API key for sending quote emails | `re_123456789...` |
+| `RESEND_FROM_EMAIL` | Sender email for quote notifications | `requests@yourdomain.com` |
+
+---
+
+## 💻 Local Development
+
+### Installation & Run
 ```sh
 npm ci
-npx wrangler login
-npx wrangler d1 create jaro-cleaning-db
-npx wrangler r2 bucket create jaro-cleaning-media
-```
-
-В `wrangler.jsonc` замени нулевой `database_id` на ID из результата создания D1.
-В `vars.ADMIN_EMAILS` впиши свой email администратора (один адрес).
-Проверь доступность R2 и Images в своём аккаунте Cloudflare; их использование
-может требовать включения сервиса и оплаты по тарифу аккаунта.
-
-## 2. Первый запуск
-
-```sh
-npm run test:auth
-npm run build
-npx wrangler d1 migrations apply jaro-cleaning-db --remote
-npx wrangler deploy
-npx wrangler secret put ADMIN_PASSWORD
-```
-
-Введи уникальный пароль длиной не менее 20 символов, лучше случайный из менеджера
-паролей. Не добавляй пароль в файлы или GitHub. До настройки email и пароля
-админка закрыта. После деплоя открой выданный Cloudflare адрес, затем `/admin`.
-Браузер запросит логин (email из ADMIN_EMAILS) и пароль. Используй HTTPS и отдельное
-приватное окно для админки; закрытие окна очищает сохранённый браузером Basic login.
-Вход через ChatGPT заменён отдельной проверкой пароля на сервере. Публичные
-посетители сайта не должны входить в аккаунт.
-
-Для писем по заявкам настрой Resend и подтверждённый адрес отправителя:
-
-```sh
-npx wrangler secret put RESEND_API_KEY
-npx wrangler secret put RESEND_FROM_EMAIL
-```
-
-RESEND_FROM_EMAIL: адрес с подтверждённого в Resend домена, например
-`JARO Cleaning <requests@your-domain.nl>` — замени своим реальным адресом.
-Получатель задаётся в контактных данных сайта через админку. Без настройки Resend
-заявки сохраняются в D1, но email не отправляется. Проверь отправку реальной тестовой
-заявки и получение письма перед рекламой сайта.
-
-## 3. Загрузка на GitHub
-
-Создай пустой репозиторий `jaro-cleaning` в своём GitHub, затем выполни:
-
-```sh
-git init
-git add .
-git commit -m "Import JARO Cleaning"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/jaro-cleaning.git
-git push -u origin main
-```
-
-Замени YOUR_USERNAME. Можно использовать GitHub Desktop: добавь эту папку и нажми
-Publish repository. Загружай содержимое папки, а не ZIP. Сохрани `.github` и
-`.gitignore`; `node_modules` и `dist` не загружай.
-
-В GitHub → репозиторий → Settings → Secrets and variables → Actions добавь:
-
-- `CLOUDFLARE_ACCOUNT_ID`: ID твоего аккаунта Cloudflare.
-- `CLOUDFLARE_API_TOKEN`: токен с правами редактирования Workers Scripts и D1,
-  доступом к R2 для этого аккаунта и необходимыми правами чтения аккаунта.
-  Используй шаблон Cloudflare Edit Cloudflare Workers и добавь D1 Edit.
-
-После настройки запусти Actions → Deploy JARO Cleaning → Run workflow.
-Дальнейшие push в main запускают тесты входа, сборку, миграции D1 и деплой.
-Не делай первый запуск сайта вручную до применения миграций: приложение создаёт
-таблицы при обращении, что может конфликтовать с первыми миграциями.
-
-## 4. Купленный домен
-
-1. Добавь домен в Cloudflare, проверь импорт существующих DNS-записей.
-2. У продавца домена замени nameservers на два значения, выданных Cloudflare.
-   Сохрани записи почты MX/TXT, чтобы не нарушить работу существующей почты.
-3. Дождись статуса Active в Cloudflare.
-4. Workers & Pages → jaro-cleaning → Settings → Domains & Routes → Add → Custom Domain.
-5. Введи свой домен. Если нужен www, добавь его отдельным Custom Domain.
-6. Cloudflare создаст необходимые DNS-записи и сертификат HTTPS. Проверь оба адреса.
-
-Никакого GitHub Pages CNAME для этой схемы не требуется.
-Точное название домена не было предоставлено, поэтому в конфигурацию он не внесён.
-
-## Перенос данных
-
-Это экспорт КОДА, а не резервная копия рабочего окружения Sites. В него НЕ включены:
-сохранённые заявки, изменения контактных данных/цен из D1, загруженные в R2 фото,
-пароли и ключи сервисов. Новый сайт начнёт со значений `lib/site-config.ts` и
-фотографий из `public`. Проверь телефон, WhatsApp, цены и email в админке перед запуском.
-Изображения, загруженные через старую админку, нужно загрузить заново или перенести
-R2 отдельно. Базу можно переносить отдельно при наличии доступа к её экспорту.
-
-## Локальная разработка
-
-```sh
 npm run dev
 ```
 
-Для локальной админки создай игнорируемый `.dev.vars` с ADMIN_PASSWORD (20+ символов).
-ADMIN_EMAILS находится в wrangler.jsonc. Локальные данные D1/R2 отдельны от production.
-Используй localhost. Для проверки production сборки: `npm run build && npm run preview`.
+### Build & Preview Locally
+```sh
+npm run build
+npm run start
+```
 
-## Проверка и пределы
-
-Защита админки тестируется командой `npm run test:auth`: поддельные заголовки,
-неверный пароль, отсутствующая конфигурация, HTTPS и межсайтовые запросы.
-Пароль защищает админку; для дополнительного ограничения попыток входа можно
-включить Cloudflare Access или правила ограничения запросов в своём аккаунте.
-Реальный внешний деплой, DNS и доставку email нужно проверить в твоём аккаунте.
-
-Официальные инструкции:
-- https://developers.cloudflare.com/workers/vite-plugin/get-started/
-- https://developers.cloudflare.com/workers/ci-cd/external-cicd/github-actions/
-- https://developers.cloudflare.com/workers/configuration/routing/custom-domains/
-
-Проверено при подготовке: production-сборка завершилась успешно; 3 теста защиты админки прошли. Внешняя проверка wrangler deploy --dry-run заблокирована автоматической проверкой разрешений; реальный деплой не выполнялся.
+### Run Security & Auth Tests
+```sh
+npm test
+```
