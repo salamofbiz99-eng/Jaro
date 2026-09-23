@@ -89,7 +89,7 @@ export default function AdminEditor({ initialConfig, adminEmail }: { initialConf
         <div className={styles.sidebarBottom}>
           <small>Signed in as</small>
           <strong>{adminEmail}</strong>
-          <a href="/signout-with-chatgpt?return_to=%2F">Close admin session</a>
+          <a href="/admin/logout">Sign out</a>
         </div>
       </aside>
 
