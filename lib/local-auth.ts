@@ -1,12 +1,14 @@
 import { cookies } from "next/headers";
 
 const COOKIE_NAME = "jaro_admin_session";
-const SESSION_SECONDS = 12 * 60 * 60;
+const SESSION_SECONDS = 7 * 24 * 60 * 60; // 7 days
 
 type LocalAuthRuntime = {
   ADMIN_USERNAME?: string;
   ADMIN_PASSWORD_SHA256?: string;
   ADMIN_SESSION_SECRET?: string;
+  ADMIN_EMAILS?: string;
+  ADMIN_PASSWORD?: string;
 };
 
 function runtime(): LocalAuthRuntime {
@@ -15,7 +17,19 @@ function runtime(): LocalAuthRuntime {
     ADMIN_USERNAME: env.ADMIN_USERNAME ?? (typeof process !== "undefined" ? process.env?.ADMIN_USERNAME : undefined),
     ADMIN_PASSWORD_SHA256: env.ADMIN_PASSWORD_SHA256 ?? (typeof process !== "undefined" ? process.env?.ADMIN_PASSWORD_SHA256 : undefined),
     ADMIN_SESSION_SECRET: env.ADMIN_SESSION_SECRET ?? (typeof process !== "undefined" ? process.env?.ADMIN_SESSION_SECRET : undefined),
+    ADMIN_EMAILS: env.ADMIN_EMAILS ?? (typeof process !== "undefined" ? process.env?.ADMIN_EMAILS : undefined),
+    ADMIN_PASSWORD: env.ADMIN_PASSWORD ?? (typeof process !== "undefined" ? process.env?.ADMIN_PASSWORD : undefined),
   };
+}
+
+function getSessionSecret(): string {
+  const config = runtime();
+  return (
+    config.ADMIN_SESSION_SECRET ||
+    config.ADMIN_PASSWORD ||
+    config.ADMIN_PASSWORD_SHA256 ||
+    "jaro-admin-secure-fallback-salt-2026"
+  );
 }
 
 function bytes(value: string) {
@@ -56,32 +70,62 @@ async function signature(payload: string, secret: string) {
 
 export function isLocalAdminConfigured() {
   const config = runtime();
-  return Boolean(config.ADMIN_USERNAME && config.ADMIN_PASSWORD_SHA256 && config.ADMIN_SESSION_SECRET);
+  const hasBasic = Boolean(config.ADMIN_EMAILS && config.ADMIN_PASSWORD);
+  const hasSha = Boolean(config.ADMIN_USERNAME && config.ADMIN_PASSWORD_SHA256);
+  return hasBasic || hasSha;
 }
 
-export async function verifyLocalCredentials(username: string, password: string) {
+export async function verifyLocalCredentials(username: string, password: string): Promise<string | null> {
   const config = runtime();
-  if (!isLocalAdminConfigured()) return false;
-  if (!constantTimeEqual(username.trim(), config.ADMIN_USERNAME!)) return false;
-  return constantTimeEqual(await sha256(password), config.ADMIN_PASSWORD_SHA256!.toLowerCase());
+  const cleanUser = username.trim().toLowerCase();
+  const cleanPass = password;
+  if (!cleanUser || !cleanPass) return null;
+
+  // 1. Check against ADMIN_EMAILS & ADMIN_PASSWORD
+  if (config.ADMIN_EMAILS && config.ADMIN_PASSWORD) {
+    const allowedEmails = config.ADMIN_EMAILS
+      .split(",")
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean);
+
+    const emailMatches =
+      allowedEmails.includes(cleanUser) ||
+      (cleanUser === "admin" && allowedEmails.length > 0);
+
+    if (emailMatches && constantTimeEqual(cleanPass, config.ADMIN_PASSWORD)) {
+      return allowedEmails[0] || cleanUser;
+    }
+  }
+
+  // 2. Check against ADMIN_USERNAME & ADMIN_PASSWORD_SHA256
+  if (config.ADMIN_USERNAME && config.ADMIN_PASSWORD_SHA256) {
+    if (constantTimeEqual(cleanUser, config.ADMIN_USERNAME.toLowerCase())) {
+      const passHash = await sha256(cleanPass);
+      if (constantTimeEqual(passHash, config.ADMIN_PASSWORD_SHA256.toLowerCase())) {
+        return config.ADMIN_USERNAME;
+      }
+    }
+  }
+
+  return null;
 }
 
 export async function createLocalSession(username: string) {
   const expiresAt = Math.floor(Date.now() / 1000) + SESSION_SECONDS;
   const payload = base64UrlEncode(bytes(JSON.stringify({ username, expiresAt })));
-  return `${payload}.${await signature(payload, runtime().ADMIN_SESSION_SECRET!)}`;
+  return `${payload}.${await signature(payload, getSessionSecret())}`;
 }
 
-async function verifyLocalSession(token: string | undefined) {
+async function verifyLocalSession(token: string | undefined): Promise<string | null> {
   if (!token || !isLocalAdminConfigured()) return null;
   const [payload, suppliedSignature] = token.split(".");
   if (!payload || !suppliedSignature) return null;
-  const expectedSignature = await signature(payload, runtime().ADMIN_SESSION_SECRET!);
+  const expectedSignature = await signature(payload, getSessionSecret());
   if (!constantTimeEqual(suppliedSignature, expectedSignature)) return null;
 
   try {
     const value = JSON.parse(new TextDecoder().decode(base64UrlDecode(payload))) as { username?: string; expiresAt?: number };
-    if (value.username !== runtime().ADMIN_USERNAME) return null;
+    if (!value.username) return null;
     if (!value.expiresAt || value.expiresAt < Math.floor(Date.now() / 1000)) return null;
     return value.username;
   } catch {
@@ -95,19 +139,40 @@ export async function getLocalAdminFromCookies() {
 }
 
 export async function getLocalAdminFromRequest(request: Request) {
+  // 1. Session cookie
   const cookieHeader = request.headers.get("cookie") ?? "";
   const token = cookieHeader
     .split(";")
     .map((part) => part.trim())
     .find((part) => part.startsWith(`${COOKIE_NAME}=`))
     ?.slice(COOKIE_NAME.length + 1);
-  return verifyLocalSession(token);
+  const fromCookie = await verifyLocalSession(token);
+  if (fromCookie) return fromCookie;
+
+  // 2. HTTP Basic Auth header if present
+  const authHeader = request.headers.get("authorization") ?? "";
+  if (authHeader.startsWith("Basic ")) {
+    try {
+      const decoded = atob(authHeader.slice(6));
+      const colon = decoded.indexOf(":");
+      if (colon > 0) {
+        const u = decoded.slice(0, colon);
+        const p = decoded.slice(colon + 1);
+        const verified = await verifyLocalCredentials(u, p);
+        if (verified) return verified;
+      }
+    } catch {
+      // ignore decoding error
+    }
+  }
+
+  return null;
 }
 
 export function localSessionCookie(token: string) {
-  return `${COOKIE_NAME}=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${SESSION_SECONDS}`;
+  return `${COOKIE_NAME}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${SESSION_SECONDS}`;
 }
 
 export function clearLocalSessionCookie() {
-  return `${COOKIE_NAME}=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0`;
+  return `${COOKIE_NAME}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`;
 }
