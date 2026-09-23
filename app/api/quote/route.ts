@@ -42,8 +42,8 @@ function message(input: QuoteRequestInput, id: number) {
 
 async function emailRequest(input: QuoteRequestInput, id: number, destination: string) {
   const runtime = (globalThis as unknown as { __JARO_ENV__?: MailRuntime }).__JARO_ENV__;
-  const apiKey = runtime?.RESEND_API_KEY;
-  const from = runtime?.RESEND_FROM_EMAIL;
+  const apiKey = runtime?.RESEND_API_KEY ?? (typeof process !== "undefined" ? process.env?.RESEND_API_KEY : undefined);
+  const from = runtime?.RESEND_FROM_EMAIL ?? (typeof process !== "undefined" ? process.env?.RESEND_FROM_EMAIL : undefined);
   if (!apiKey || !from || !destination) return false;
 
   const response = await fetch("https://api.resend.com/emails", {

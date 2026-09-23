@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: jaro-cleaning
+    runtime: node
+    region: frankfurt
+    plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: npx vite preview --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: NODE_VERSION
+        value: "22.13.0"
+      - key: ADMIN_EMAILS
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM_EMAIL
+        sync: false

@@ -10,7 +10,12 @@ type LocalAuthRuntime = {
 };
 
 function runtime(): LocalAuthRuntime {
-  return (globalThis as unknown as { __JARO_ENV__?: LocalAuthRuntime }).__JARO_ENV__ ?? {};
+  const env = (globalThis as unknown as { __JARO_ENV__?: LocalAuthRuntime }).__JARO_ENV__ ?? {};
+  return {
+    ADMIN_USERNAME: env.ADMIN_USERNAME ?? (typeof process !== "undefined" ? process.env?.ADMIN_USERNAME : undefined),
+    ADMIN_PASSWORD_SHA256: env.ADMIN_PASSWORD_SHA256 ?? (typeof process !== "undefined" ? process.env?.ADMIN_PASSWORD_SHA256 : undefined),
+    ADMIN_SESSION_SECRET: env.ADMIN_SESSION_SECRET ?? (typeof process !== "undefined" ? process.env?.ADMIN_SESSION_SECRET : undefined),
+  };
 }
 
 function bytes(value: string) {

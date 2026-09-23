@@ -1,3 +1,5 @@
+import { getLocalSqliteAdapter } from "./sqlite-fallback";
+
 type QuoteRuntime = { DB?: D1Database };
 
 export type QuoteRequestInput = {
@@ -28,8 +30,7 @@ const CREATE_QUOTE_REQUESTS = `
 `;
 
 function database() {
-  const db = (globalThis as unknown as { __JARO_ENV__?: QuoteRuntime }).__JARO_ENV__?.DB;
-  if (!db) throw new Error("The site database is not available.");
+  const db = (globalThis as unknown as { __JARO_ENV__?: QuoteRuntime }).__JARO_ENV__?.DB || getLocalSqliteAdapter();
   return db;
 }
 

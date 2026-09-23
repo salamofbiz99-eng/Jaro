@@ -1,4 +1,5 @@
 import { DEFAULT_SITE_CONFIG, sanitizeSiteConfig, type SiteConfig } from "@/lib/site-config";
+import { getLocalSqliteAdapter } from "./sqlite-fallback";
 
 type JaroRuntime = { DB?: D1Database };
 
@@ -12,8 +13,7 @@ const CREATE_SITE_SETTINGS = `
 `;
 
 async function database() {
-  const db = (globalThis as unknown as { __JARO_ENV__?: JaroRuntime }).__JARO_ENV__?.DB;
-  if (!db) throw new Error("The site database is not available.");
+  const db = (globalThis as unknown as { __JARO_ENV__?: JaroRuntime }).__JARO_ENV__?.DB || getLocalSqliteAdapter();
   await db.prepare(CREATE_SITE_SETTINGS).run();
   return db;
 }
