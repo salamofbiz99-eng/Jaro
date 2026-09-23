@@ -109,9 +109,13 @@ function safeImagePath(value: unknown, fallback: string) {
 }
 
 export function sanitizeSiteConfig(input: unknown): SiteConfig {
-  const candidate = input && typeof input === "object" ? input as Partial<SiteConfig> : {};
-  const hero = candidate.hero && typeof candidate.hero === "object" ? candidate.hero : {};
-  const business = candidate.business && typeof candidate.business === "object" ? candidate.business : {};
+  const candidate = (input && typeof input === "object" ? input : {}) as {
+    hero?: Partial<SiteConfig["hero"]>;
+    business?: Partial<SiteConfig["business"]>;
+    services?: Array<Partial<ServiceConfig>>;
+  };
+  const hero = candidate.hero || {};
+  const business = candidate.business || {};
   const serviceCandidates = Array.isArray(candidate.services) ? candidate.services : [];
 
   return {
@@ -129,9 +133,7 @@ export function sanitizeSiteConfig(input: unknown): SiteConfig {
       establishedYear: cleanText(business.establishedYear, DEFAULT_SITE_CONFIG.business.establishedYear, 4),
     },
     services: DEFAULT_SITE_CONFIG.services.map((fallback, index) => {
-      const service = serviceCandidates[index] && typeof serviceCandidates[index] === "object"
-        ? serviceCandidates[index]
-        : {};
+      const service = serviceCandidates[index] || {};
       return {
         ...fallback,
         title: cleanText(service.title, fallback.title, 80),
