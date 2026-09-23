@@ -1,6 +1,6 @@
 type AuthEnv = { ADMIN_EMAILS?: string; ADMIN_PASSWORD?: string };
 const protectedPath = (path: string) => path === "/admin" || path.startsWith("/admin/") || path === "/api/admin" || path.startsWith("/api/admin/");
-const deny = () => new Response("Administrator sign-in required.", { status: 401, headers: { "WWW-Authenticate": 'Basic realm="JARO Admin", charset="UTF-8"', "Cache-Control": "no-store" } });
+const deny = () => new Response("Administrator sign-in required.", { status: 401, headers: { "WWW-Authenticate": 'Basic realm="Janor Admin", charset="UTF-8"', "Cache-Control": "no-store" } });
 async function equal(a: string, b: string) {
   const digest = async (s: string) => new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)));
   const [x,y] = await Promise.all([digest(a),digest(b)]);

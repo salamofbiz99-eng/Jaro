@@ -17,7 +17,8 @@ interface ExecutionContext {
 const serverHandler = {
   async fetch(request: Request, env?: ServerEnv, ctx?: ExecutionContext): Promise<Response> {
     const runtimeEnv = env || {};
-    (globalThis as unknown as { __JARO_ENV__?: ServerEnv }).__JARO_ENV__ = runtimeEnv;
+    (globalThis as unknown as { __JANOR_ENV__?: ServerEnv; __JARO_ENV__?: ServerEnv }).__JANOR_ENV__ = runtimeEnv;
+    (globalThis as unknown as { __JANOR_ENV__?: ServerEnv; __JARO_ENV__?: ServerEnv }).__JARO_ENV__ = runtimeEnv;
     const authenticated = await authenticate(request, runtimeEnv);
     if (authenticated instanceof Response) return authenticated;
     request = authenticated;

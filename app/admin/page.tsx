@@ -25,7 +25,7 @@ export default async function AdminPage({
       {configured ? (
         <form className={styles.lockedCard} action="/api/admin/login" method="post">
           <span className={styles.lockIcon}>J</span>
-          <p className={styles.kicker}>JARO CONTROL ROOM</p>
+          <p className={styles.kicker}>JANOR CONTROL ROOM</p>
           <h1>Owner sign in</h1>
           <p>Voer uw beheerdersgegevens in om de website te bewerken.</p>
           {error && (
@@ -58,19 +58,19 @@ export default async function AdminPage({
             Inloggen
           </button>
           <Link className={styles.textLink} href="/">
-            Terug naar JARO Cleaning
+            Terug naar Janor Cleaning
           </Link>
         </form>
       ) : (
         <section className={styles.lockedCard}>
           <span className={styles.lockIcon}>J</span>
-          <p className={styles.kicker}>JARO CONTROL ROOM</p>
+          <p className={styles.kicker}>JANOR CONTROL ROOM</p>
           <h1>Admin access not configured.</h1>
           <p>
             Please set <code>ADMIN_EMAILS</code> and <code>ADMIN_PASSWORD</code> in your Render environment variables.
           </p>
           <Link className={styles.textLink} href="/">
-            Return to JARO Cleaning
+            Return to Janor Cleaning
           </Link>
         </section>
       )}

@@ -1,5 +1,6 @@
 function configuredAdminEmails() {
-  const runtime = (globalThis as unknown as { __JARO_ENV__?: Record<string, unknown> }).__JARO_ENV__;
+  const globalObj = globalThis as unknown as { __JANOR_ENV__?: Record<string, unknown>; __JARO_ENV__?: Record<string, unknown> };
+  const runtime = globalObj.__JANOR_ENV__ ?? globalObj.__JARO_ENV__;
   const value = runtime?.ADMIN_EMAILS ?? (typeof process !== "undefined" ? process.env?.ADMIN_EMAILS : undefined);
   if (typeof value !== "string") return [];
   return value

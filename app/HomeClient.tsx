@@ -34,7 +34,7 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
   const whatsappDigits = business.whatsapp.replace(/\D/g, "");
   const callDigits = business.phone.replace(/[^\d+]/g, "");
   const whatsappHref = whatsappDigits
-    ? `https://wa.me/${whatsappDigits}?text=${encodeURIComponent("Hello JARO Cleaning, I would like a quotation.")}`
+    ? `https://wa.me/${whatsappDigits}?text=${encodeURIComponent("Hello Janor Cleaning, I would like a quotation.")}`
     : "#quote";
   const callHref = callDigits ? `tel:${callDigits}` : "#quote";
   const [menuOpen, setMenuOpen] = useState(false);
@@ -50,7 +50,7 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
   function prepareReview(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    setReviewSummary(`Mijn beoordeling van JARO Cleaning\nNaam: ${data.get("reviewName")}\nDienst: ${data.get("reviewService")}\n\n${data.get("reviewText")}`);
+    setReviewSummary(`Mijn beoordeling van Janor Cleaning\nNaam: ${data.get("reviewName")}\nDienst: ${data.get("reviewService")}\n\n${data.get("reviewText")}`);
     setReviewCopied(false);
     setReviewCopyError(false);
   }
@@ -95,7 +95,7 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
       website: String(data.get("website") || ""),
     };
     const summary = [
-      "Hello JARO Cleaning, I would like a quotation.",
+      "Hello Janor Cleaning, I would like a quotation.",
       `Service: ${payload.service}`,
       `Property: ${payload.propertyType}`,
       `Postcode: ${payload.postcode}`,
@@ -131,13 +131,13 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
   return (
     <main>
       <header className="site-header">
-        <a className="brand" href="#top" aria-label="JARO Cleaning home">
+        <a className="brand" href="#top" aria-label="Janor Cleaning home">
           <span className="brand-mark">
-            <span>JR</span>
+            <span>JN</span>
             <span className="brand-stars" aria-hidden="true">★★★★★</span>
           </span>
           <span className="brand-copy">
-            <strong>JARO</strong>
+            <strong>Janor</strong>
             <small>Cleaning Amsterdam</small>
           </span>
         </a>
@@ -188,12 +188,12 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
           </div>
         </div>
 
-        <div className="hero-stage" aria-label="JARO quality standard illustration">
+        <div className="hero-stage" aria-label="Janor quality standard illustration">
           <div className="stage-grid" />
           <div className="stage-glow" />
           <div className="quality-card">
             <div className="quality-topline">
-              <span>JARO STANDARD</span>
+              <span>JANOR STANDARD</span>
               <span className="live-dot"><i /> QUALITY CHECK</span>
             </div>
             <div className="quality-score">
@@ -207,7 +207,7 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
             </div>
             <div className="quality-footer">
               <span>Checked with care</span>
-              <span>JARO · AMSTERDAM</span>
+              <span>JANOR · AMSTERDAM</span>
             </div>
           </div>
           <div className="floating-note note-one"><Sparkle /><span><strong>Detail first</strong><small>Hotel-level finish</small></span></div>
@@ -250,7 +250,7 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
 
       <section className="standard-section" id="standard">
         <div className="standard-intro">
-          <p className="eyebrow"><span /> The JARO standard</p>
+          <p className="eyebrow"><span /> The Janor standard</p>
           <h2>Not just cleaned.<br /><em>Checked.</em></h2>
           <p>Hotel housekeeping taught us something simple: a room is not ready because the work is finished. It is ready when the result has been checked.</p>
           <a className="text-link" href="#quote">Plan your cleaning <span>↗</span></a>
@@ -270,13 +270,13 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
         <div className="about-monogram" aria-hidden="true">
           <div className="about-ring ring-one" />
           <div className="about-ring ring-two" />
-          <strong>JARO</strong>
+          <strong>Janor</strong>
           <small>{business.serviceArea.toUpperCase()} · EST. {business.establishedYear}</small>
         </div>
         <div className="about-copy">
-          <p className="eyebrow dark"><span /> The standard behind JARO</p>
+          <p className="eyebrow dark"><span /> The standard behind Janor</p>
           <h2>One name.<br />One standard.</h2>
-          <p className="about-lead">JARO is built around a simple promise: reliable work, clear communication and attention to the details that change how a space feels.</p>
+          <p className="about-lead">Janor is built around a simple promise: reliable work, clear communication and attention to the details that change how a space feels.</p>
           <p>Our operating standard is shaped by hands-on experience in hotel housekeeping and quality supervision. That experience becomes a practical system for private homes, offices, hospitality spaces and post-renovation cleaning: clear expectations, structured work and a final check.</p>
           <div className="about-values">
             <span><i>01</i> Care</span>
@@ -350,15 +350,15 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
                 </label>
               </div>
               {requestError && <p className="form-error" role="alert">{requestError}</p>}
-              <button className="form-submit" type="submit" disabled={submitting}>{submitting ? "Sending request…" : "Send request to JARO"} <span>↗</span></button>
-              <p className="form-note">Your details are sent securely to JARO Cleaning and used only to respond to this request.</p>
+              <button className="form-submit" type="submit" disabled={submitting}>{submitting ? "Sending request…" : "Send request to Janor"} <span>↗</span></button>
+              <p className="form-note">Your details are sent securely to Janor Cleaning and used only to respond to this request.</p>
             </form>
           ) : (
             <div className="request-ready" aria-live="polite">
               <span className="ready-icon">✓</span>
               <p className="eyebrow dark"><span /> {requestEmailed ? "Request sent" : "Request saved"}</p>
-              <h3>{requestEmailed ? "JARO received your request." : "Your request is ready."}</h3>
-              <p>{requestEmailed ? "We sent the details to JARO by email. You can also continue directly in WhatsApp." : "Email delivery is not connected yet. Please continue by WhatsApp or call JARO."}</p>
+              <h3>{requestEmailed ? "Janor received your request." : "Your request is ready."}</h3>
+              <p>{requestEmailed ? "We sent the details to Janor by email. You can also continue directly in WhatsApp." : "Email delivery is not connected yet. Please continue by WhatsApp or call Janor."}</p>
               <pre>{requestSummary}</pre>
               <div className="ready-actions">
                 {business.whatsapp ? (
@@ -420,7 +420,7 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
         </div>
         <details className="review-editor" id="write-review">
           <summary><FiEdit3 aria-hidden="true" /> Schrijf over uw ervaring</summary>
-          <p>Heeft u JARO Cleaning ingeschakeld? Deel uw eerlijke ervaring. Uw tekst wordt niet automatisch op de website gepubliceerd.</p>
+          <p>Heeft u Janor Cleaning ingeschakeld? Deel uw eerlijke ervaring. Uw tekst wordt niet automatisch op de website gepubliceerd.</p>
           <form onSubmit={prepareReview} className="review-form">
             <label>Uw naam<input name="reviewName" autoComplete="name" maxLength={100} required /></label>
             <label>Dienst<select name="reviewService">{services.map((service) => <option key={service.number}>{service.title}</option>)}</select></label>
@@ -432,7 +432,7 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
             <pre>{reviewSummary}</pre>
             <div className="review-send-actions">
               {whatsappDigits && <a className="review-write-button" href={`https://wa.me/${whatsappDigits}?text=${encodeURIComponent(reviewSummary)}`} target="_blank" rel="noreferrer"><FaWhatsapp aria-hidden="true" /> Verstuur via WhatsApp</a>}
-              {business.email && <a className="review-write-button" href={`mailto:${business.email}?subject=${encodeURIComponent("Beoordeling JARO Cleaning")}&body=${encodeURIComponent(reviewSummary)}`}>Verstuur via e-mail</a>}
+              {business.email && <a className="review-write-button" href={`mailto:${business.email}?subject=${encodeURIComponent("Beoordeling Janor Cleaning")}&body=${encodeURIComponent(reviewSummary)}`}>Verstuur via e-mail</a>}
               <button type="button" className="review-write-button" onClick={copyReview}>{reviewCopied ? "Tekst gekopieerd" : "Kopieer tekst"}</button>
             </div>
             {!whatsappDigits && !business.email && <p>Contactgegevens worden binnenkort toegevoegd. U kunt de tekst nu kopiëren; deze is nog niet verstuurd.</p>}
@@ -446,16 +446,16 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
           {whatsappDigits && (
             <a
               className="contact-dock-link whatsapp"
-              href={`https://wa.me/${whatsappDigits}?text=${encodeURIComponent("Hello JARO Cleaning, I would like a quotation.")}`}
+              href={`https://wa.me/${whatsappDigits}?text=${encodeURIComponent("Hello Janor Cleaning, I would like a quotation.")}`}
               target="_blank"
               rel="noreferrer"
-              aria-label="Message JARO Cleaning on WhatsApp"
+              aria-label="Message Janor Cleaning on WhatsApp"
             >
               <FaWhatsapp aria-hidden="true" /><strong>WhatsApp</strong><small>Message us</small>
             </a>
           )}
           {callDigits && (
-            <a className="contact-dock-link call" href={`tel:${callDigits}`} aria-label="Call JARO Cleaning">
+            <a className="contact-dock-link call" href={`tel:${callDigits}`} aria-label="Call Janor Cleaning">
               <FiPhoneCall aria-hidden="true" /><strong>Call now</strong><small>{business.phone}</small>
             </a>
           )}
@@ -465,9 +465,9 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
       <footer>
         <div className="footer-top">
           <div>
-            <a className="brand footer-brand" href="#top" aria-label="JARO Cleaning home">
-              <span className="brand-mark"><span>JR</span><span className="brand-stars" aria-hidden="true">★★★★★</span></span>
-              <span className="brand-copy"><strong>JARO</strong><small>Cleaning Amsterdam</small></span>
+            <a className="brand footer-brand" href="#top" aria-label="Janor Cleaning home">
+              <span className="brand-mark"><span>JN</span><span className="brand-stars" aria-hidden="true">★★★★★</span></span>
+              <span className="brand-copy"><strong>Janor</strong><small>Cleaning Amsterdam</small></span>
             </a>
             <p>Hotel-standard attention to detail for Amsterdam homes, offices and hospitality spaces.</p>
           </div>
@@ -475,7 +475,7 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
           <div className="footer-links"><strong>Service area</strong><span>{business.serviceArea}</span><span>Surrounding areas on request</span></div>
           <div className="footer-links"><strong>Company details</strong><span>KVK: {business.kvk}</span>{business.email && <a href={`mailto:${business.email}`}>{business.email}</a>}{business.phone && <a href={`tel:${business.phone}`}>{business.phone}</a>}{!business.email && !business.phone && <span>Contact details to be connected</span>}</div>
         </div>
-        <div className="footer-bottom"><span>© {business.establishedYear}–2026 JARO Cleaning</span><span>Five stars are a decorative brand element—not a customer rating.</span><span className="footer-actions"><a href="#top">Back to top ↑</a></span></div>
+        <div className="footer-bottom"><span>© {business.establishedYear}–2026 Janor Cleaning</span><span>Five stars are a decorative brand element—not a customer rating.</span><span className="footer-actions"><a href="#top">Back to top ↑</a></span></div>
       </footer>
     </main>
   );

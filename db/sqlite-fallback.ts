@@ -7,7 +7,7 @@ let localAdapterInstance: any = null;
 export function getLocalSqliteAdapter() {
   if (localAdapterInstance) return localAdapterInstance;
 
-  const dbPath = process.env.DATABASE_PATH || "./data/jaro.db";
+  const dbPath = process.env.DATABASE_PATH || (fs.existsSync("./data/jaro.db") ? "./data/jaro.db" : "./data/janor.db");
   fs.mkdirSync(path.dirname(dbPath), { recursive: true });
   const sqlite = new DatabaseSync(dbPath);
 

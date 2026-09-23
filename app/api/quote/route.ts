@@ -27,7 +27,7 @@ function requestInput(value: unknown): QuoteRequestInput & { website: string } {
 
 function message(input: QuoteRequestInput, id: number) {
   return [
-    `New JARO Cleaning request #${id}`,
+    `New Janor Cleaning request #${id}`,
     "",
     `Service: ${input.service}`,
     `Property: ${input.propertyType}`,
@@ -41,7 +41,8 @@ function message(input: QuoteRequestInput, id: number) {
 }
 
 async function emailRequest(input: QuoteRequestInput, id: number, destination: string) {
-  const runtime = (globalThis as unknown as { __JARO_ENV__?: MailRuntime }).__JARO_ENV__;
+  const globalObj = globalThis as unknown as { __JANOR_ENV__?: MailRuntime; __JARO_ENV__?: MailRuntime };
+  const runtime = globalObj.__JANOR_ENV__ ?? globalObj.__JARO_ENV__;
   const apiKey = runtime?.RESEND_API_KEY ?? (typeof process !== "undefined" ? process.env?.RESEND_API_KEY : undefined);
   const from = runtime?.RESEND_FROM_EMAIL ?? (typeof process !== "undefined" ? process.env?.RESEND_FROM_EMAIL : undefined);
   if (!apiKey || !from || !destination) return false;
@@ -51,8 +52,8 @@ async function emailRequest(input: QuoteRequestInput, id: number, destination: s
     headers: {
       authorization: `Bearer ${apiKey}`,
       "content-type": "application/json",
-      "idempotency-key": `jaro-quote-${id}`,
-      "user-agent": "jaro-cleaning-site/1.0",
+      "idempotency-key": `janor-quote-${id}`,
+      "user-agent": "janor-cleaning-site/1.0",
     },
     body: JSON.stringify({
       from,
@@ -90,6 +91,6 @@ export async function POST(request: Request) {
 
     return Response.json({ ok: true, emailed, requestId: saved.id });
   } catch {
-    return Response.json({ ok: false, error: "Your request could not be sent. Please try WhatsApp or call JARO." }, { status: 500 });
+    return Response.json({ ok: false, error: "Your request could not be sent. Please try WhatsApp or call Janor." }, { status: 500 });
   }
 }

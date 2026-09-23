@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 
-const COOKIE_NAME = "jaro_admin_session";
+const COOKIE_NAME = "janor_admin_session";
+const LEGACY_COOKIE_NAME = "jaro_admin_session";
 const SESSION_SECONDS = 7 * 24 * 60 * 60; // 7 days
 
 type LocalAuthRuntime = {
@@ -12,7 +13,8 @@ type LocalAuthRuntime = {
 };
 
 function runtime(): LocalAuthRuntime {
-  const env = (globalThis as unknown as { __JARO_ENV__?: LocalAuthRuntime }).__JARO_ENV__ ?? {};
+  const globalObj = globalThis as unknown as { __JANOR_ENV__?: LocalAuthRuntime; __JARO_ENV__?: LocalAuthRuntime };
+  const env = globalObj.__JANOR_ENV__ ?? globalObj.__JARO_ENV__ ?? {};
   return {
     ADMIN_USERNAME: env.ADMIN_USERNAME ?? (typeof process !== "undefined" ? process.env?.ADMIN_USERNAME : undefined),
     ADMIN_PASSWORD_SHA256: env.ADMIN_PASSWORD_SHA256 ?? (typeof process !== "undefined" ? process.env?.ADMIN_PASSWORD_SHA256 : undefined),
@@ -28,7 +30,7 @@ function getSessionSecret(): string {
     config.ADMIN_SESSION_SECRET ||
     config.ADMIN_PASSWORD ||
     config.ADMIN_PASSWORD_SHA256 ||
-    "jaro-admin-secure-fallback-salt-2026"
+    "janor-admin-secure-fallback-salt-2026"
   );
 }
 
@@ -135,7 +137,8 @@ async function verifyLocalSession(token: string | undefined): Promise<string | n
 
 export async function getLocalAdminFromCookies() {
   const cookieStore = await cookies();
-  return verifyLocalSession(cookieStore.get(COOKIE_NAME)?.value);
+  const token = cookieStore.get(COOKIE_NAME)?.value ?? cookieStore.get(LEGACY_COOKIE_NAME)?.value;
+  return verifyLocalSession(token);
 }
 
 export async function getLocalAdminFromRequest(request: Request) {
@@ -144,8 +147,8 @@ export async function getLocalAdminFromRequest(request: Request) {
   const token = cookieHeader
     .split(";")
     .map((part) => part.trim())
-    .find((part) => part.startsWith(`${COOKIE_NAME}=`))
-    ?.slice(COOKIE_NAME.length + 1);
+    .find((part) => part.startsWith(`${COOKIE_NAME}=`) || part.startsWith(`${LEGACY_COOKIE_NAME}=`))
+    ?.split("=")[1];
   const fromCookie = await verifyLocalSession(token);
   if (fromCookie) return fromCookie;
 

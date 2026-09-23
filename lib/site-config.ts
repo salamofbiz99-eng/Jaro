@@ -46,7 +46,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
       text: "A dependable routine for a home that stays fresh, calm and ready for everyday life.",
       tag: "Weekly · Biweekly · Monthly",
       image: "/services/regular-cleaning.webp",
-      alt: "Blonde JARO cleaner wiping a table during a regular home clean",
+      alt: "Blonde Janor cleaner wiping a table during a regular home clean",
     },
     {
       number: "02",
@@ -62,7 +62,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
       text: "A thorough handover clean that helps you leave well—or begin in a genuinely fresh space.",
       tag: "Homes · Apartments · Rentals",
       image: "/services/move-in-out.webp",
-      alt: "Blonde JARO cleaner preparing an empty apartment for a move",
+      alt: "Blonde Janor cleaner preparing an empty apartment for a move",
     },
     {
       number: "04",
@@ -138,7 +138,7 @@ export function sanitizeSiteConfig(input: unknown): SiteConfig {
         text: cleanText(service.text, fallback.text, 280),
         tag: cleanText(service.tag, fallback.tag, 100),
         image: safeImagePath(service.image, fallback.image),
-        alt: cleanText(service.alt, `${cleanText(service.title, fallback.title, 80)} — JARO Cleaning`, 180),
+        alt: cleanText(service.alt, `${cleanText(service.title, fallback.title, 80)} — Janor Cleaning`, 180),
       };
     }),
   };

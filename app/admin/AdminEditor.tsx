@@ -45,7 +45,7 @@ export default function AdminEditor({ initialConfig, adminEmail }: { initialConf
       const result = await response.json() as { ok?: boolean; url?: string; error?: string };
       if (!response.ok || !result.ok || !result.url) throw new Error(result.error || "The photo could not be uploaded.");
       updateService(index, "image", result.url);
-      updateService(index, "alt", `${config.services[index].title} — JARO Cleaning`);
+      updateService(index, "alt", `${config.services[index].title} — Janor Cleaning`);
       setUploadState((current) => ({ ...current, [index]: "done" }));
       setMessage("Photo uploaded. Click Save & publish to use it on the public website.");
     } catch (error) {
@@ -76,9 +76,9 @@ export default function AdminEditor({ initialConfig, adminEmail }: { initialConf
   return (
     <main className={styles.adminShell}>
       <aside className={styles.sidebar}>
-        <Link className={styles.adminBrand} href="/" aria-label="Open JARO website">
-          <span>JR</span>
-          <div><strong>JARO</strong><small>ADMIN PANEL</small></div>
+        <Link className={styles.adminBrand} href="/" aria-label="Open Janor website">
+          <span>JN</span>
+          <div><strong>Janor</strong><small>ADMIN PANEL</small></div>
         </Link>
         <nav aria-label="Admin sections">
           <a href="#overview">Overview</a>
@@ -95,7 +95,7 @@ export default function AdminEditor({ initialConfig, adminEmail }: { initialConf
 
       <section className={styles.workspace}>
         <header className={styles.topbar}>
-          <div><p>JARO CONTROL ROOM</p><h1>Website content</h1></div>
+          <div><p>JANOR CONTROL ROOM</p><h1>Website content</h1></div>
           <div className={styles.topActions}>
             <Link href="/" target="_blank" rel="noreferrer">View live site ↗</Link>
             <button type="button" onClick={saveChanges} disabled={saveState === "saving"}>
@@ -126,7 +126,7 @@ export default function AdminEditor({ initialConfig, adminEmail }: { initialConf
 
         <section className={styles.panel} id="services">
           <div className={styles.panelHeading}>
-            <div><p>02 · SERVICES</p><h2>What JARO offers</h2></div>
+            <div><p>02 · SERVICES</p><h2>What Janor offers</h2></div>
             <span>Upload a JPG, PNG or WebP photo. Maximum file size: 8 MB.</span>
           </div>
           <div className={styles.serviceEditorGrid}>
@@ -163,7 +163,7 @@ export default function AdminEditor({ initialConfig, adminEmail }: { initialConf
             <span>Use the international WhatsApp format, for example +31612345678.</span>
           </div>
           <div className={styles.formGrid}>
-            <label>Request notification email<input type="email" value={config.business.email} placeholder="hello@jarocleaning.nl" onChange={(event) => updateBusiness("email", event.target.value)} /><small>New cleaning requests are delivered to this address after the mail service is connected.</small></label>
+            <label>Request notification email<input type="email" value={config.business.email} placeholder="hello@janor.nl" onChange={(event) => updateBusiness("email", event.target.value)} /><small>New cleaning requests are delivered to this address after the mail service is connected.</small></label>
             <label>WhatsApp message button<input value={config.business.whatsapp} placeholder="+31 6 12 34 56 78" onChange={(event) => updateBusiness("whatsapp", event.target.value)} /><small>Opens a direct WhatsApp conversation.</small></label>
             <label>Direct call button<input value={config.business.phone} placeholder="+31 6 12 34 56 78" onChange={(event) => updateBusiness("phone", event.target.value)} /><small>Starts a phone call on mobile.</small></label>
             <label>Service area<input value={config.business.serviceArea} maxLength={120} onChange={(event) => updateBusiness("serviceArea", event.target.value)} /></label>
@@ -172,7 +172,7 @@ export default function AdminEditor({ initialConfig, adminEmail }: { initialConf
           </div>
         </section>
 
-        <footer className={styles.adminFooter}>JARO Cleaning · Amsterdam · Owner control panel</footer>
+        <footer className={styles.adminFooter}>Janor Cleaning · Amsterdam · Owner control panel</footer>
       </section>
     </main>
   );

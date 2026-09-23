@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "JARO Cleaning Amsterdam | Hotel-Standard Cleaning",
+  title: "Janor Cleaning Amsterdam | Hotel-Standard Cleaning",
   description:
     "Professional cleaning for homes, offices and hospitality spaces in Amsterdam, shaped by real housekeeping and quality-control experience.",
   other: {

@@ -1,12 +1,12 @@
-# JARO Cleaning — Render.com + Docker Setup
+# Janor Cleaning — Render.com + Docker Setup
 
-Full source code and deployment setup for **JARO Cleaning** configured for **Render.com** and **Docker**.
+Full source code and deployment setup for **Janor Cleaning** configured for **Render.com** and **Docker**.
 
 ## 🚀 Overview
 
 This application runs as a Node.js / Docker web service on Render with:
 - **Framework**: Next.js App Router (via `vinext`)
-- **Database**: Embedded SQLite (`./data/jaro.db`) via Node.js `node:sqlite`
+- **Database**: Embedded SQLite (`./data/janor.db` or `./data/jaro.db`) via Node.js `node:sqlite`
 - **File Storage**: Local disk storage (`./data/uploads`)
 - **Container**: Docker (`node:22-slim`)
 
@@ -33,13 +33,10 @@ Set the following environment variables in Render:
 |----------|-------------|-----------------------|
 | `NODE_ENV` | Environment mode | `production` |
 | `PORT` | Listening Port | `10000` |
-| `ADMIN_USERNAME` | Admin login username | `admin@jaro-cleaning.nl` |
-| `ADMIN_PASSWORD_SHA256` | SHA256 hash of admin password | `6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b` |
-| `ADMIN_SESSION_SECRET` | Secret key for admin session tokens | `your-secret-key-32-chars-long` |
-| `ADMIN_EMAILS` | Admin email address | `admin@jaro-cleaning.nl` |
-| `ADMIN_PASSWORD` | Admin password | `your-secure-password-20-chars` |
+| `ADMIN_EMAILS` | Admin email address | `admin@janor.nl` |
+| `ADMIN_PASSWORD` | Admin password | `your-secure-password` |
 | `RESEND_API_KEY` | Resend API key for sending quote emails | `re_123456789...` |
-| `RESEND_FROM_EMAIL` | Sender email for quote notifications | `requests@yourdomain.com` |
+| `RESEND_FROM_EMAIL` | Sender email for quote notifications | `requests@janor.nl` |
 
 ---
 
