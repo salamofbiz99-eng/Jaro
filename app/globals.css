@@ -241,7 +241,7 @@ button, input, select, textarea { font: inherit; }
 .service-photo { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #dfe9e4; cursor: pointer; }
 .service-photo:focus-visible { outline: 3px solid var(--green); outline-offset: -3px; }
 .service-photo::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom, rgba(5,35,32,.04), transparent 48%, rgba(5,35,32,.18)); }
-.service-photo img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+.service-photo img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center top; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
 .service-card:hover .service-photo img { transform: scale(1.025); }
 .service-photo .service-number { position: absolute; z-index: 2; top: 18px; left: 18px; width: 39px; height: 39px; display: grid; place-items: center; color: white; background: rgba(6,43,40,.82); border: 1px solid rgba(255,255,255,.42); border-radius: 50%; backdrop-filter: blur(8px); }
 .service-photo-expand { position: absolute; z-index: 2; bottom: 14px; right: 14px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 11px; font-weight: 500; letter-spacing: .02em; color: white; background: rgba(6,43,40,.85); border: 1px solid rgba(255,255,255,.35); border-radius: 20px; backdrop-filter: blur(8px); opacity: .88; transition: all .25s ease; pointer-events: none; }

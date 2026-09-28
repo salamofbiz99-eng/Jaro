@@ -46,7 +46,7 @@
 .serviceEditorTop span { color: #0f5a52; font-family: Georgia, serif; font-size: 13px; }
 .serviceEditorTop strong { font-family: Georgia, serif; font-size: 19px; font-weight: 400; }
 .photoEditor { position: relative; overflow: hidden; aspect-ratio: 4 / 3; background: #dfe8e3; border: 1px solid #ccd2cb; }
-.photoEditor img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.photoEditor img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center top; }
 .photoUpload { position: absolute; right: 10px; bottom: 10px; min-height: 38px; padding: 0 14px; display: inline-flex !important; justify-content: center; align-items: center; color: white !important; background: rgba(7,31,30,.9); border: 1px solid rgba(255,255,255,.35); border-radius: 3px; cursor: pointer; text-transform: none !important; letter-spacing: 0 !important; backdrop-filter: blur(8px); }
 .photoUpload:hover { background: #0f5a52; }
 .photoUpload input { position: absolute; width: 1px !important; height: 1px; padding: 0 !important; opacity: 0; pointer-events: none; }
