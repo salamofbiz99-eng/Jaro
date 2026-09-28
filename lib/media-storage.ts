@@ -4,7 +4,7 @@ import path from "node:path";
 function getLocalDiskBucket() {
   const uploadsDir = process.env.UPLOADS_DIR || "./data/uploads";
   return {
-    async put(key: string, data: ArrayBuffer | Uint8Array, options?: { httpMetadata?: { contentType?: string } }) {
+    async put(key: string, data: ArrayBuffer | Uint8Array, options?: { httpMetadata?: { contentType?: string; cacheControl?: string } }) {
       const filePath = path.join(uploadsDir, key);
       await fs.promises.mkdir(path.dirname(filePath), { recursive: true });
       await fs.promises.writeFile(filePath, Buffer.from(data as any));

@@ -44,6 +44,13 @@ const translations = {
       tellUsSub: "We will help you choose the right service and prepare a clear quotation.",
       buildRequest: "Build your request",
     },
+    lightbox: {
+      open: "Full view",
+      close: "Close (Esc)",
+      prev: "Previous photo",
+      next: "Next photo",
+      requestQuote: "Request quote for this service",
+    },
     standard: {
       eyebrow: "The Janor standard",
       heading: "Not just cleaned.\nChecked.",
@@ -194,6 +201,13 @@ const translations = {
       tellUs: "Vertel ons over\nuw ruimte.",
       tellUsSub: "We helpen u de juiste dienst te kiezen en stellen een duidelijke offerte op.",
       buildRequest: "Stel uw aanvraag samen",
+    },
+    lightbox: {
+      open: "Volledig scherm",
+      close: "Sluiten (Esc)",
+      prev: "Vorige foto",
+      next: "Volgende foto",
+      requestQuote: "Offerte aanvragen voor deze dienst",
     },
     standard: {
       eyebrow: "De Janor standaard",
@@ -380,6 +394,49 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
   const [reviewSummary, setReviewSummary] = useState("");
   const [reviewCopied, setReviewCopied] = useState(false);
   const [reviewCopyError, setReviewCopyError] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [selectedService, setSelectedService] = useState("");
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setLightboxIndex(null);
+      } else if (e.key === "ArrowLeft") {
+        setLightboxIndex((prev) => (prev !== null ? (prev - 1 + services.length) % services.length : null));
+      } else if (e.key === "ArrowRight") {
+        setLightboxIndex((prev) => (prev !== null ? (prev + 1) % services.length : null));
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [lightboxIndex, services.length]);
+
+  function handleTouchStart(e: React.TouchEvent<HTMLDivElement>) {
+    setTouchStart(e.touches[0].clientX);
+  }
+
+  function handleTouchEnd(e: React.TouchEvent<HTMLDivElement>) {
+    if (touchStart === null) return;
+    const touchEnd = e.changedTouches[0].clientX;
+    const diff = touchStart - touchEnd;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        setLightboxIndex((prev) => (prev !== null ? (prev + 1) % services.length : null));
+      } else {
+        setLightboxIndex((prev) => (prev !== null ? (prev - 1 + services.length) % services.length : null));
+      }
+    }
+    setTouchStart(null);
+  }
 
   // Persist language choice
   useEffect(() => {
@@ -596,11 +653,32 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
           <p>{t.services.intro}</p>
         </div>
         <div className="services-grid">
-          {services.map((service) => (
+          {services.map((service, index) => (
             <article className="service-card" key={service.number}>
-              <div className="service-photo">
+              <div
+                className="service-photo"
+                role="button"
+                tabIndex={0}
+                aria-label={`${t.lightbox.open}: ${service.title}`}
+                onClick={() => setLightboxIndex(index)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setLightboxIndex(index);
+                  }
+                }}
+              >
                 <img src={service.image} alt={service.alt} loading="lazy" width="1200" height="900" />
                 <span className="service-number">{service.number}</span>
+                <span className="service-photo-expand" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="15 3 21 3 21 9" />
+                    <polyline points="9 21 3 21 3 15" />
+                    <line x1="21" y1="3" x2="14" y2="10" />
+                    <line x1="3" y1="21" x2="10" y2="14" />
+                  </svg>
+                  <span>{t.lightbox.open}</span>
+                </span>
               </div>
               <div className="service-body">
                 <h3>{service.title}</h3>
@@ -690,9 +768,14 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
               <div className="form-grid">
                 <label className="honeypot" aria-hidden="true">{t.quote.form.website}<input name="website" tabIndex={-1} autoComplete="off" /></label>
                 <label>{t.quote.form.service}
-                  <select name="service" required defaultValue="">
+                  <select
+                    name="service"
+                    required
+                    value={selectedService}
+                    onChange={(e) => setSelectedService(e.target.value)}
+                  >
                     <option value="" disabled>{t.quote.form.serviceDefault}</option>
-                    {services.map((s) => <option key={s.number}>{s.title}</option>)}
+                    {services.map((s) => <option key={s.number} value={s.title}>{s.title}</option>)}
                   </select>
                 </label>
                 <label>{t.quote.form.property}
@@ -848,6 +931,111 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
           <span className="footer-actions"><a href="#top">{t.footer.backToTop}</a></span>
         </div>
       </footer>
+
+      {/* ── Fullscreen Lightbox Modal ── */}
+      {lightboxIndex !== null && services[lightboxIndex] && (
+        <div
+          className="lightbox-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label={services[lightboxIndex].title}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setLightboxIndex(null);
+          }}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div className="lightbox-header">
+            <div className="lightbox-title-wrap">
+              <span className="lightbox-counter">
+                {String(lightboxIndex + 1).padStart(2, "0")} / {String(services.length).padStart(2, "0")}
+              </span>
+              <h2 className="lightbox-title">{services[lightboxIndex].title}</h2>
+            </div>
+            <button
+              type="button"
+              className="lightbox-close-btn"
+              onClick={() => setLightboxIndex(null)}
+              aria-label={t.lightbox.close}
+            >
+              <span>✕</span>
+              <small>{t.lightbox.close}</small>
+            </button>
+          </div>
+
+          <div
+            className="lightbox-body"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setLightboxIndex(null);
+            }}
+          >
+            <button
+              type="button"
+              className="lightbox-nav-btn lightbox-nav-prev"
+              onClick={(e) => {
+                e.stopPropagation();
+                setLightboxIndex((prev) => (prev !== null ? (prev - 1 + services.length) % services.length : null));
+              }}
+              aria-label={t.lightbox.prev}
+            >
+              ‹
+            </button>
+
+            <div className="lightbox-img-stage">
+              <img
+                key={services[lightboxIndex].image}
+                src={services[lightboxIndex].image}
+                alt={services[lightboxIndex].alt}
+                className="lightbox-img"
+              />
+            </div>
+
+            <button
+              type="button"
+              className="lightbox-nav-btn lightbox-nav-next"
+              onClick={(e) => {
+                e.stopPropagation();
+                setLightboxIndex((prev) => (prev !== null ? (prev + 1) % services.length : null));
+              }}
+              aria-label={t.lightbox.next}
+            >
+              ›
+            </button>
+
+            <div className="lightbox-dots">
+              {services.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className={`lightbox-dot${i === lightboxIndex ? " active" : ""}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLightboxIndex(i);
+                  }}
+                  aria-label={`${t.lightbox.open}: ${services[i].title}`}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="lightbox-footer">
+            <div className="lightbox-info">
+              <span className="lightbox-tag">{services[lightboxIndex].tag}</span>
+              <p className="lightbox-desc">{services[lightboxIndex].text}</p>
+            </div>
+            <a
+              href="#quote"
+              className="lightbox-cta-btn"
+              onClick={() => {
+                setSelectedService(services[lightboxIndex].title);
+                setLightboxIndex(null);
+              }}
+            >
+              {t.lightbox.requestQuote} <span>↗</span>
+            </a>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

@@ -45,4 +45,5 @@ next-env.d.ts
 /.vinext/
 /data/
 *.db
+*.tsbuildinfo
 
