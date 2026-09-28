@@ -668,7 +668,15 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
                   }
                 }}
               >
-                <img src={service.image} alt={service.alt} loading="lazy" width="1200" height="900" />
+                <img
+                  src={service.image}
+                  alt={service.alt}
+                  loading={index < 2 ? "eager" : "lazy"}
+                  fetchPriority={index < 2 ? "high" : "auto"}
+                  width="900"
+                  height="1200"
+                  decoding={index < 2 ? "sync" : "async"}
+                />
                 <span className="service-number">{service.number}</span>
                 <span className="service-photo-expand" aria-hidden="true">
                   <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
