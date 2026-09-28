@@ -1,5 +1,8 @@
 type AuthEnv = { ADMIN_EMAILS?: string; ADMIN_PASSWORD?: string };
-const protectedPath = (path: string) => path === "/admin" || path.startsWith("/admin/") || path === "/api/admin" || path.startsWith("/api/admin/");
+// Only the admin UI pages require HTTP Basic Auth at the worker level.
+// API routes at /api/admin/* authenticate via session cookie in the route handler.
+const protectedPath = (path: string) => path === "/admin" || path.startsWith("/admin/");
+
 const deny = () => new Response("Administrator sign-in required.", { status: 401, headers: { "WWW-Authenticate": 'Basic realm="Janor Admin", charset="UTF-8"', "Cache-Control": "no-store" } });
 async function equal(a: string, b: string) {
   const digest = async (s: string) => new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)));

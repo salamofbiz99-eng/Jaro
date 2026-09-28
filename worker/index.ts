@@ -40,6 +40,12 @@ const serverHandler = {
       protectedResponse.headers.set("Cache-Control", "no-store");
       return protectedResponse;
     }
+    // Prevent browser from caching the home page so admin changes appear immediately
+    if (url.pathname === "/" || url.pathname === "") {
+      const dynamicResponse = new Response(response.body, response);
+      dynamicResponse.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
+      return dynamicResponse;
+    }
     return response;
   },
 };

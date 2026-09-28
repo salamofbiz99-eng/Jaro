@@ -41,7 +41,7 @@ export default function AdminEditor({ initialConfig, adminEmail }: { initialConf
       const form = new FormData();
       form.append("image", file);
       form.append("serviceNumber", config.services[index].number);
-      const response = await fetch("/api/admin/service-image", { method: "POST", body: form });
+      const response = await fetch("/api/admin/service-image", { method: "POST", body: form, credentials: "include" });
       const result = await response.json() as { ok?: boolean; url?: string; error?: string };
       if (!response.ok || !result.ok || !result.url) throw new Error(result.error || "The photo could not be uploaded.");
       updateService(index, "image", result.url);
@@ -62,11 +62,12 @@ export default function AdminEditor({ initialConfig, adminEmail }: { initialConf
         method: "PUT",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(config),
+        credentials: "include",
       });
       const result = await response.json() as { ok?: boolean; error?: string };
       if (!response.ok || !result.ok) throw new Error(result.error || "The changes could not be saved.");
       setSaveState("saved");
-      setMessage("Published. The public website now uses these details.");
+      setMessage("Published ✓ — your changes are live.");
     } catch (error) {
       setSaveState("error");
       setMessage(error instanceof Error ? error.message : "The changes could not be saved.");
