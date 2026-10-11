@@ -542,12 +542,12 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
       <header className="site-header">
         <a className="brand" href="#top" aria-label="Janor Cleaning home">
           <span className="brand-mark">
-            <span>JN</span>
-            <span className="brand-stars" aria-hidden="true">★★★★★</span>
+            <img src="/logo-shield.png" alt="Janor Cleaning Logo" width="48" height="48" />
           </span>
           <span className="brand-copy">
             <strong>Janor</strong>
             <small>Cleaning Amsterdam</small>
+            <span className="brand-stars" aria-hidden="true">★★★★★</span>
           </span>
         </a>
 
@@ -921,8 +921,14 @@ export default function HomeClient({ config }: { config: SiteConfig }) {
         <div className="footer-top">
           <div>
             <a className="brand footer-brand" href="#top" aria-label="Janor Cleaning home">
-              <span className="brand-mark"><span>JN</span><span className="brand-stars" aria-hidden="true">★★★★★</span></span>
-              <span className="brand-copy"><strong>Janor</strong><small>Cleaning Amsterdam</small></span>
+              <span className="brand-mark">
+                <img src="/logo-shield.png" alt="Janor Cleaning Logo" width="48" height="48" />
+              </span>
+              <span className="brand-copy">
+                <strong>Janor</strong>
+                <small>Cleaning Amsterdam</small>
+                <span className="brand-stars" aria-hidden="true">★★★★★</span>
+              </span>
             </a>
             <p>{t.footer.tagline}</p>
           </div>

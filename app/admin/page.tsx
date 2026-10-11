@@ -24,7 +24,9 @@ export default async function AdminPage({
     <main className={styles.lockedPage}>
       {configured ? (
         <form className={styles.lockedCard} action="/api/admin/login" method="post">
-          <span className={styles.lockIcon}>J</span>
+          <div className={styles.loginLogo}>
+            <img src="/logo.png" alt="Janor Cleaning Logo" width="110" height="122" />
+          </div>
           <p className={styles.kicker}>JANOR CONTROL ROOM</p>
           <h1>Owner sign in</h1>
           <p>Voer uw beheerdersgegevens in om de website te bewerken.</p>
@@ -63,7 +65,9 @@ export default async function AdminPage({
         </form>
       ) : (
         <section className={styles.lockedCard}>
-          <span className={styles.lockIcon}>J</span>
+          <div className={styles.loginLogo}>
+            <img src="/logo.png" alt="Janor Cleaning Logo" width="110" height="122" />
+          </div>
           <p className={styles.kicker}>JANOR CONTROL ROOM</p>
           <h1>Admin access not configured.</h1>
           <p>

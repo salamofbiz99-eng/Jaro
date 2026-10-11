@@ -78,7 +78,9 @@ export default function AdminEditor({ initialConfig, adminEmail }: { initialConf
     <main className={styles.adminShell}>
       <aside className={styles.sidebar}>
         <Link className={styles.adminBrand} href="/" aria-label="Open Janor website">
-          <span>JN</span>
+          <span className={styles.adminBrandMark}>
+            <img src="/logo-shield.png" alt="Janor Cleaning Logo" width="40" height="40" />
+          </span>
           <div><strong>Janor</strong><small>ADMIN PANEL</small></div>
         </Link>
         <nav aria-label="Admin sections">

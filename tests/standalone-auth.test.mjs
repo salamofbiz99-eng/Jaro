@@ -15,8 +15,8 @@ test('strips public identity and accepts verified admin',async()=>{
 });
 test('blocks wrong password, cross-origin writes and insecure transport',async()=>{
  assert.equal((await authenticate(new Request('https://test.test/admin',{headers:{authorization:'Basic '+btoa('admin@example.com:wrong')}}),env)).status,401);
- assert.equal((await authenticate(new Request('https://test.test/api/admin/site-config',{method:'PUT',headers:{authorization:auth,origin:'https://evil.test'}}),env)).status,403);
+ assert.equal((await authenticate(new Request('https://test.test/admin/action',{method:'PUT',headers:{authorization:auth,origin:'https://evil.test'}}),env)).status,403);
  assert.equal((await authenticate(new Request('http://test.test/admin',{headers:{authorization:auth}}),env)).status,403);
- const request=await authenticate(new Request('https://test.test/api/admin/site-config',{method:'PUT',headers:{authorization:auth,origin:'https://test.test'}}),env);
+ const request=await authenticate(new Request('https://test.test/admin/action',{method:'PUT',headers:{authorization:auth,origin:'https://test.test'}}),env);
  assert.ok(request instanceof Request);
 });
